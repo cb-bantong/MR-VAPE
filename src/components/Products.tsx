@@ -35,7 +35,8 @@ export default function Products() {
 
   const handleCardClick = (group: Product[]) => {
     setSelectedGroup(group);
-    setActiveFlavorIndex(0); // Reset active flavor to default (first flavor)
+    const firstImageIdx = group.findIndex((p) => p.imageUrl);
+    setActiveFlavorIndex(firstImageIdx !== -1 ? firstImageIdx : 0);
   };
 
   const handleModalClose = () => {

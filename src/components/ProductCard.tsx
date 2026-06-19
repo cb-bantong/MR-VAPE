@@ -15,7 +15,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ group, onClick }: ProductCardProps) {
-  const primaryProduct = group[0];
+  const primaryProduct = group.find((p) => p.imageUrl) || group[0];
   const flavorCount = group.length;
 
   return (
