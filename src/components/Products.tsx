@@ -52,7 +52,7 @@ export default function Products() {
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-6 py-12 md:py-16 z-10 space-y-10">
         {/* Page Header */}
-        <div className="text-center max-w-2xl mx-auto space-y-3">
+        <div className="text-center max-w-2xl mx-auto space-y-4">
           <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
             Our Premium <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-teal-400 drop-shadow-[0_0_15px_rgba(34,211,238,0.25)]">
@@ -62,6 +62,10 @@ export default function Products() {
           <p className="text-sm md:text-base text-slate-400">
             Browse through our premium vape devices and selection of flavors. Select any card to explore.
           </p>
+          <div className="inline-flex items-center space-x-2.5 px-4 py-2 bg-blue-950/20 border border-blue-500/15 rounded-xl text-xs font-semibold text-blue-300">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+            <span>To place an order, please send a message to our <a href="https://www.facebook.com/profile.php?id=61580296598261" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline font-bold transition">Facebook Page</a>!</span>
+          </div>
         </div>
 
         {/* Loading State */}

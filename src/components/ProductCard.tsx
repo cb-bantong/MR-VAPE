@@ -64,6 +64,18 @@ export default function ProductCard({ group, onClick }: ProductCardProps) {
             </svg>
           </span>
         </div>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            window.open("https://www.facebook.com/profile.php?id=61580296598261", "_blank");
+          }}
+          className="w-full mt-3 py-2 bg-blue-600/10 hover:bg-blue-600/20 active:bg-blue-600/30 border border-blue-500/20 hover:border-blue-500/30 text-blue-450 font-bold rounded-xl text-[10px] uppercase tracking-wider transition-all duration-200 cursor-pointer flex items-center justify-center space-x-1"
+        >
+          <span>Order via Facebook</span>
+          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </button>
       </div>
     </div>
   );
