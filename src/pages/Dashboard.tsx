@@ -924,8 +924,17 @@ export default function Dashboard() {
                         <td className="px-6 py-4 font-bold text-white tracking-wide shrink-0">
                           {product.company}
                         </td>
-                        <td className="px-6 py-4 text-slate-200 font-medium">
-                          {product.productName}
+                        <td className="px-6 py-4 text-slate-200 font-medium flex items-center space-x-3 h-[64px]">
+                          <div className="w-8 h-8 rounded-lg bg-slate-950/80 border border-slate-800/80 overflow-hidden flex items-center justify-center shrink-0">
+                            {product.imageUrl ? (
+                              <img src={product.imageUrl} alt={product.productName} className="w-full h-full object-cover" />
+                            ) : (
+                              <svg className="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              </svg>
+                            )}
+                          </div>
+                          <span className="truncate">{product.productName}</span>
                         </td>
                         <td className="px-6 py-4">
                           <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-900 text-cyan-400 border border-slate-800">
