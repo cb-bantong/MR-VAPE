@@ -7,6 +7,7 @@ import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Products from "./components/Products.tsx";
+import Contact from "./pages/Contact.tsx";
 import "./index.css";
 import App from "./App.tsx";
 
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
   {
     path: "/products",
     element: <Products />,
+  },
+  {
+    path: "/contact",
+    element: <Contact />,
   },
 ]);
 

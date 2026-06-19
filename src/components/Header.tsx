@@ -68,12 +68,12 @@ export default function Header({ navBar = true }: { navBar?: boolean }) {
             >
               Products
             </Link>
-            <a
-              href="#contact"
+            <Link
+              to="/contact"
               className="px-4 py-2 text-sm font-semibold text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg shadow-lg shadow-cyan-600/20 transition-all duration-200"
             >
               Contact Us
-            </a>
+            </Link>
           </nav>
         )}
       </div>
@@ -93,12 +93,12 @@ export default function Header({ navBar = true }: { navBar?: boolean }) {
           >
             Products
           </Link>
-          <a
-            href="#contact"
+          <Link
+            to="/contact"
             className="block w-full text-center px-4 py-2.5 font-bold text-white bg-cyan-600 hover:bg-cyan-500 rounded-lg transition"
           >
             Contact Us
-          </a>
+          </Link>
         </div>
       )}
     </header>

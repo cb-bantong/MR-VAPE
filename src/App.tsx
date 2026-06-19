@@ -36,12 +36,12 @@ export default function App() {
           >
             Browse Products
           </button>
-          <a
-            href="#contact"
-            className="w-full sm:w-auto px-8 py-3.5 bg-slate-900/80 hover:bg-slate-900 hover:text-white border border-slate-800 rounded-xl font-semibold text-slate-300 transition-all duration-200"
+          <button
+            onClick={() => navigate("/contact")}
+            className="w-full sm:w-auto px-8 py-3.5 bg-slate-900/80 hover:bg-slate-900 hover:text-white border border-slate-800 rounded-xl font-semibold text-slate-300 transition-all duration-200 cursor-pointer"
           >
             Contact Sales
-          </a>
+          </button>
         </div>
       </main>
       
