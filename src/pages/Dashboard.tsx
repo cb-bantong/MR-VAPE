@@ -1,7 +1,7 @@
 import { useConvexAuth, useAuthActions } from "@convex-dev/auth/react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import logo from "../assets/react.svg";
+import logo from "../assets/Logo.png";
 import { api } from "../../convex/_generated/api";
 import { useQuery, useMutation } from "convex/react";
 import Swal from "sweetalert2";
@@ -298,8 +298,8 @@ export default function Dashboard() {
     return (
       <div className="bg-slate-950 min-h-screen antialiased flex flex-col items-center justify-center">
         <div className="flex flex-col items-center space-y-4">
-          <img src={logo} alt="MRVAPE" className="w-16 h-16 animate-spin" />
-          <div className="text-slate-400 font-medium">Loading session...</div>
+          <img src={logo} alt="MRVAPE" className="w-20 h-20 animate-logo-pulse" />
+          <div className="text-slate-400 font-medium tracking-wide">Loading session...</div>
         </div>
       </div>
     );
@@ -360,11 +360,11 @@ export default function Dashboard() {
       >
         {/* Sidebar Header */}
         <div className="p-6 flex items-center justify-between border-b border-slate-900/60">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 group cursor-pointer">
             <img
               src={logo}
               alt="MRVAPE"
-              className="w-8 h-8 animate-[spin_10s_linear_infinite]"
+              className="w-9 h-9 group-hover:scale-105 transition-transform duration-300"
             />
             <h1 className="text-xl font-bold tracking-tight text-white">
               MR

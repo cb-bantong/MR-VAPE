@@ -1,5 +1,5 @@
 import Header from "./components/Header";
-import logo from "./assets/react.svg";
+import logo from "./assets/Logo.png";
 import { useNavigate } from "react-router-dom";
 
 export default function App() {
@@ -8,13 +8,14 @@ export default function App() {
     <div className="w-full bg-slate-950 text-slate-50 min-h-screen flex flex-col antialiased relative overflow-hidden">
       {/* Background Decorative Glows */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none"></div>
-      <div className="absolute bottom-10 left-10 w-[400px] h-[400px] bg-blue-600/5 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute bottom-10 left-10 w-[400px] h-[400px] bg-indigo-600/5 rounded-full blur-[100px] pointer-events-none"></div>
+      <div className="absolute top-1/2 right-10 w-[350px] h-[350px] bg-pink-500/5 rounded-full blur-[90px] pointer-events-none"></div>
 
       <Header />
       
       <main className="flex-1 flex flex-col justify-center items-center px-6 py-12 md:py-24 text-center max-w-4xl mx-auto z-10">
-        <div className="inline-flex p-4 bg-slate-900/80 border border-slate-800 rounded-3xl mb-8 shadow-2xl animate-fade-in">
-          <img src={logo} alt="MRVAPE Logo" className="w-16 h-16 md:w-20 md:h-20 animate-[spin_12s_linear_infinite]" />
+        <div className="inline-flex p-1.5 bg-slate-900/80 border border-slate-800/80 rounded-full mb-8 shadow-2xl animate-fade-in animate-float">
+          <img src={logo} alt="MRVAPE Logo" className="w-24 h-24 md:w-32 md:h-32 animate-logo-pulse" />
         </div>
         
         <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight text-white mb-6 animate-fade-in leading-[1.15]">

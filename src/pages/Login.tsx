@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { ConvexError } from "convex/values";
-import logo from "../assets/react.svg";
+import logo from "../assets/Logo.png";
 
 export default function Login() {
   const { signIn } = useAuthActions();
@@ -46,12 +46,13 @@ export default function Login() {
       <main className="flex-1 flex items-center justify-center p-6 relative overflow-hidden">
         {/* Decorative background glows */}
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-cyan-500/10 rounded-full blur-[100px] pointer-events-none"></div>
-        <div className="absolute bottom-10 left-1/3 w-[300px] h-[300px] bg-blue-500/5 rounded-full blur-[80px] pointer-events-none"></div>
+        <div className="absolute bottom-10 left-1/3 w-[300px] h-[300px] bg-indigo-500/5 rounded-full blur-[80px] pointer-events-none"></div>
+        <div className="absolute top-1/2 right-5 w-[250px] h-[250px] bg-pink-500/5 rounded-full blur-[70px] pointer-events-none"></div>
 
         <div className="w-full max-w-md glass-panel rounded-2xl p-8 shadow-2xl relative z-10 animate-fade-in border border-slate-800/80">
           <div className="text-center space-y-3 mb-8">
-            <div className="inline-flex p-3 bg-slate-900/80 border border-slate-800 rounded-2xl mb-2">
-              <img src={logo} alt="Logo" className="w-10 h-10 animate-[spin_12s_linear_infinite]" />
+            <div className="inline-flex p-1.5 bg-slate-900/80 border border-slate-800/80 rounded-full mb-2 animate-float">
+              <img src={logo} alt="Logo" className="w-14 h-14 animate-logo-pulse" />
             </div>
             <h1 className="text-3xl font-extrabold tracking-tight text-white">
               Welcome Back

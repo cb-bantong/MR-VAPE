@@ -1,4 +1,4 @@
-import logo from "../assets/react.svg";
+import logo from "../assets/Logo.png";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -14,8 +14,8 @@ export default function Header({ navBar = true }: { navBar?: boolean }) {
           className="flex items-center space-x-3 cursor-pointer group"
           onClick={() => navigate("/")}
         >
-          <div className="p-2 bg-slate-900 rounded-xl border border-slate-800 group-hover:border-cyan-500/30 group-hover:bg-slate-900/80 transition-all duration-300">
-            <img src={logo} alt="MRVAPE Logo" className="w-8 h-8 animate-[spin_8s_linear_infinite]" />
+          <div className="p-1.5 bg-slate-900 rounded-xl border border-slate-800 group-hover:border-cyan-500/30 group-hover:bg-slate-900/80 transition-all duration-300">
+            <img src={logo} alt="MRVAPE Logo" className="w-9 h-9 group-hover:scale-105 transition-transform duration-300" />
           </div>
           <h1 className="font-bold text-2xl tracking-tight text-white">
             MR<span className="text-cyan-400 font-extrabold drop-shadow-[0_0_8px_rgba(34,211,238,0.2)]">VAPE</span>
