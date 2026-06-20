@@ -129,10 +129,10 @@ export default function Products() {
 
       {/* DETAIL MODAL / LIGHTBOX */}
       {selectedGroup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden animate-fade-in">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-start justify-center p-4 sm:p-6 md:items-center animate-fade-in">
+          <div className="relative my-auto w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden animate-fade-in md:my-0">
             {/* Modal Header */}
-            <div className="px-6 py-4.5 border-b border-slate-800/80 flex items-center justify-between bg-slate-950/20">
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4.5 border-b border-slate-800/80 flex items-center justify-between bg-slate-950/20">
               <span className="text-xs font-extrabold uppercase tracking-wider text-slate-400">
                 Product Details
               </span>
@@ -166,9 +166,9 @@ export default function Products() {
                 selectedGroup[0]?.description ||
                 "No description provided for this flavor.";
               return (
-                <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-8 items-start">
+                <div className="p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 items-start">
                   {/* Left Column: Image corresponding to active flavor */}
-                  <div className="w-full aspect-square bg-slate-950/50 rounded-2xl border border-slate-800 flex items-center justify-center overflow-hidden">
+                  <div className="w-full max-h-[300px] sm:max-h-none aspect-square bg-slate-950/50 rounded-2xl border border-slate-800 flex items-center justify-center overflow-hidden">
                     {displayImage ? (
                       <img
                         src={displayImage}
@@ -255,7 +255,7 @@ export default function Products() {
                         ))}
                       </div>
                       <span className="text-[10px] text-slate-500 italic block pt-0.5">
-                        * Hover over flavors to see description and image
+                        * Tap or hover over flavors to see description and image
                         shifts.
                       </span>
                     </div>
