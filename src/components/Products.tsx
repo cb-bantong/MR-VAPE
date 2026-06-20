@@ -22,16 +22,18 @@ export default function Products() {
   const [activeFlavorIndex, setActiveFlavorIndex] = useState(0);
 
   // Group products by company + productName (case-insensitive key grouping)
-  const groupedProducts = products ? Object.values(
-    products.reduce((acc: Record<string, Product[]>, product) => {
-      const key = `${product.company.toLowerCase()}_${product.productName.toLowerCase()}`;
-      if (!acc[key]) {
-        acc[key] = [];
-      }
-      acc[key].push(product);
-      return acc;
-    }, {})
-  ) : [];
+  const groupedProducts = products
+    ? Object.values(
+        products.reduce((acc: Record<string, Product[]>, product) => {
+          const key = `${product.company.toLowerCase()}_${product.productName.toLowerCase()}`;
+          if (!acc[key]) {
+            acc[key] = [];
+          }
+          acc[key].push(product);
+          return acc;
+        }, {}),
+      )
+    : [];
 
   const handleCardClick = (group: Product[]) => {
     setSelectedGroup(group);
@@ -61,22 +63,51 @@ export default function Products() {
             </span>
           </h2>
           <p className="text-sm md:text-base text-slate-400">
-            Browse through our premium vape devices and selection of flavors. Select any card to explore.
+            Browse through our premium vape devices and selection of flavors.
+            Select any card to explore.
           </p>
           <div className="inline-flex items-center space-x-2.5 px-4 py-2 bg-blue-950/20 border border-blue-500/15 rounded-xl text-xs font-semibold text-blue-300">
             <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
-            <span>To place an order, please send a message to our <a href="https://www.facebook.com/profile.php?id=61580296598261" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline font-bold transition">Facebook Page</a>!</span>
+            <span>
+              To place an order, please send a message to our{" "}
+              <a
+                href="https://www.facebook.com/profile.php?id=61580296598261"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-400 hover:text-blue-300 underline font-bold transition"
+              >
+                Facebook Page
+              </a>
+              !
+            </span>
           </div>
         </div>
 
         {/* Loading State */}
         {products === undefined ? (
           <div className="flex flex-col items-center justify-center py-20 space-y-4">
-            <svg className="animate-spin h-8 w-8 text-cyan-400" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <svg
+              className="animate-spin h-8 w-8 text-cyan-400"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
-            <span className="text-sm text-slate-500 font-medium">Fetching catalog...</span>
+            <span className="text-sm text-slate-500 font-medium">
+              Fetching catalog...
+            </span>
           </div>
         ) : groupedProducts.length === 0 ? (
           <div className="text-center py-24 text-slate-500 border border-dashed border-slate-900 rounded-3xl bg-slate-900/10">
@@ -109,31 +140,58 @@ export default function Products() {
                 onClick={handleModalClose}
                 className="p-1 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition cursor-pointer"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             </div>
 
             {/* Modal Body */}
             {(() => {
-              const displayImage = selectedGroup[activeFlavorIndex]?.imageUrl || selectedGroup[0]?.imageUrl;
-              const displayDescription = selectedGroup[activeFlavorIndex]?.description || selectedGroup[0]?.description || "No description provided for this flavor.";
+              const displayImage =
+                selectedGroup[activeFlavorIndex]?.imageUrl ||
+                selectedGroup[0]?.imageUrl;
+              const displayDescription =
+                selectedGroup[activeFlavorIndex]?.description ||
+                selectedGroup[0]?.description ||
+                "No description provided for this flavor.";
               return (
                 <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-8 items-start">
-                  
                   {/* Left Column: Image corresponding to active flavor */}
                   <div className="w-full aspect-square bg-slate-950/50 rounded-2xl border border-slate-800 flex items-center justify-center overflow-hidden">
                     {displayImage ? (
                       <img
                         src={displayImage}
-                        alt={selectedGroup[activeFlavorIndex]?.productName || selectedGroup[0]?.productName}
+                        alt={
+                          selectedGroup[activeFlavorIndex]?.productName ||
+                          selectedGroup[0]?.productName
+                        }
                         className="w-full h-full object-cover animate-fade-in"
                         key={activeFlavorIndex} // Key forces remount/fade-in animation when image changes
                       />
                     ) : (
-                      <svg className="w-16 h-16 text-slate-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      <svg
+                        className="w-16 h-16 text-slate-800"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
+                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                        />
                       </svg>
                     )}
                   </div>
@@ -148,16 +206,23 @@ export default function Products() {
                         {selectedGroup[0].productName}
                       </h3>
                       <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider">
-                        Flavor: <span className="text-cyan-400 font-bold">{selectedGroup[activeFlavorIndex]?.flavor}</span>
+                        Flavor:{" "}
+                        <span className="text-cyan-400 font-bold">
+                          {selectedGroup[activeFlavorIndex]?.flavor}
+                        </span>
                       </p>
                       <div className="flex items-center justify-between pt-1.5">
                         <span className="text-xl font-extrabold text-cyan-400">
-                          ₱{(selectedGroup[activeFlavorIndex]?.price ?? selectedGroup[0].price).toFixed(2)}
+                          ₱
+                          {(
+                            selectedGroup[activeFlavorIndex]?.price ??
+                            selectedGroup[0].price
+                          ).toFixed(2)}
                         </span>
                         {selectedGroup[activeFlavorIndex]?.stock > 0 ? (
                           <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-emerald-950/20 text-emerald-400 border border-emerald-500/10 tracking-wider">
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            <span>Available ({selectedGroup[activeFlavorIndex].stock})</span>
+                            <span>Available</span>
                           </span>
                         ) : (
                           <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-red-950/20 text-red-400 border border-red-500/10 tracking-wider">
@@ -190,7 +255,8 @@ export default function Products() {
                         ))}
                       </div>
                       <span className="text-[10px] text-slate-500 italic block pt-0.5">
-                        * Hover over flavors to see description and image shifts.
+                        * Hover over flavors to see description and image
+                        shifts.
                       </span>
                     </div>
 
@@ -212,8 +278,18 @@ export default function Products() {
                       className="w-full py-3 bg-blue-600/10 hover:bg-blue-600/20 active:bg-blue-600/30 border border-blue-500/20 hover:border-blue-500/30 text-blue-400 font-bold rounded-xl text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer flex items-center justify-center space-x-2"
                     >
                       <span>Order via Facebook</span>
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      <svg
+                        className="w-4 h-4"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                        />
                       </svg>
                     </a>
                   </div>
