@@ -21,10 +21,10 @@ export default function Products() {
   const [selectedGroup, setSelectedGroup] = useState<Product[] | null>(null);
   const [activeFlavorIndex, setActiveFlavorIndex] = useState(0);
 
-  // Group products by productName + price (case-insensitive key grouping)
+  // Group products by company + productName (case-insensitive key grouping)
   const groupedProducts = products ? Object.values(
     products.reduce((acc: Record<string, Product[]>, product) => {
-      const key = `${product.productName.toLowerCase()}_${product.price}`;
+      const key = `${product.company.toLowerCase()}_${product.productName.toLowerCase()}`;
       if (!acc[key]) {
         acc[key] = [];
       }
