@@ -23,6 +23,7 @@ export default function Dashboard() {
   const products = useQuery(api.products.getProducts);
   const companies = useQuery(api.products.getCompanies);
   const totalStock = useQuery(api.products.getTotalSupply);
+  const sales = useQuery(api.sales.getSales);
 
   // Conditionally fetch admin-only data
   const isAdmin = currentUser?.role === "admin";
@@ -38,6 +39,7 @@ export default function Dashboard() {
   const createUserMut = useMutation(api.users.createUser);
   const updateUserMut = useMutation(api.users.updateUser);
   const deleteUserMut = useMutation(api.users.deleteUser);
+  const createSaleMut = useMutation(api.sales.createSale);
 
   // Search & Filter States
   const [productSearch, setProductSearch] = useState("");
@@ -81,6 +83,14 @@ export default function Dashboard() {
     email: "",
     role: "employee" as "employee" | "admin",
     userStatus: "active" as "active" | "inactive" | "pending",
+  });
+
+  // Sale Order Modal State
+  const [isSaleModalOpen, setIsSaleModalOpen] = useState(false);
+  const [salesFilter, setSalesFilter] = useState<"month" | "year">("month");
+  const [saleForm, setSaleForm] = useState({
+    productId: "",
+    quantity: 1,
   });
 
   useEffect(() => {
@@ -307,6 +317,26 @@ export default function Dashboard() {
     }
   };
 
+  // Handle sell order save
+  const handleSaleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!saleForm.productId) {
+      showToast("Please select a product!", "error");
+      return;
+    }
+    try {
+      await createSaleMut({
+        productId: saleForm.productId as any,
+        quantity: saleForm.quantity,
+      });
+      showToast("Sell order recorded successfully", "success");
+      setIsSaleModalOpen(false);
+      setSaleForm({ productId: "", quantity: 1 });
+    } catch (err: any) {
+      showToast(err.message || "Operation failed", "error");
+    }
+  };
+
   if (authLoading || !currentUser) {
     return (
       <div className="bg-slate-950 min-h-screen antialiased flex flex-col items-center justify-center">
@@ -323,6 +353,47 @@ export default function Dashboard() {
   const outOfStockCount = products?.filter((p) => p.stock === 0).length || 0;
   const inventoryVal =
     products?.reduce((total, p) => total + p.stock * p.price, 0) || 0;
+
+  // Calculate Sales statistics
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+
+  const monthlySalesTotal = sales
+    ? sales
+        .filter((s) => {
+          const date = new Date(s.timestamp);
+          return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+        })
+        .reduce((total, s) => total + s.priceAtSale * s.quantity, 0)
+    : 0;
+
+  const yearlySalesTotal = sales
+    ? sales
+        .filter((s) => {
+          const date = new Date(s.timestamp);
+          return date.getFullYear() === currentYear;
+        })
+        .reduce((total, s) => total + s.priceAtSale * s.quantity, 0)
+    : 0;
+
+  const monthlySalesQty = sales
+    ? sales
+        .filter((s) => {
+          const date = new Date(s.timestamp);
+          return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+        })
+        .reduce((total, s) => total + s.quantity, 0)
+    : 0;
+
+  const yearlySalesQty = sales
+    ? sales
+        .filter((s) => {
+          const date = new Date(s.timestamp);
+          return date.getFullYear() === currentYear;
+        })
+        .reduce((total, s) => total + s.quantity, 0)
+    : 0;
 
   // Filtered Products
   const filteredProducts =
@@ -466,6 +537,29 @@ export default function Dashboard() {
               />
             </svg>
             <span>Products</span>
+          </button>
+
+          <button
+            className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 cursor-pointer ${page === "sales" ? "bg-cyan-600/10 text-cyan-400 border-l-2 border-cyan-400" : "text-slate-400 hover:bg-slate-900 hover:text-slate-200"}`}
+            onClick={() => {
+              setPage("sales");
+              setMobileMenuOpen(false);
+            }}
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>Sales Orders</span>
           </button>
 
           {isAdmin && (
@@ -1334,6 +1428,175 @@ export default function Dashboard() {
             </div>
           </div>
         )}
+
+        {/* SALES LEDGER PAGE */}
+        {page === "sales" && (
+          <div className="space-y-6 animate-fade-in">
+            {/* Header section with add sale action */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-3xl font-extrabold tracking-tight text-white">
+                  Sales Ledger
+                </h2>
+                <p className="text-sm text-slate-400 mt-1">
+                  Track real-time sell orders, inventory valuation, and sales statistics.
+                </p>
+              </div>
+              <button
+                className="w-full sm:w-auto px-5 py-3.5 bg-cyan-600 hover:bg-cyan-500 active:bg-cyan-700 text-white font-bold rounded-xl shadow-lg shadow-cyan-600/20 hover:shadow-cyan-600/30 transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center space-x-2 text-sm cursor-pointer"
+                onClick={() => {
+                  setSaleForm({ productId: "", quantity: 1 });
+                  setIsSaleModalOpen(true);
+                }}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
+                </svg>
+                <span>Add Sell Order</span>
+              </button>
+            </div>
+
+            {/* Quick Analytics Panels */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Current Inventory Value Card */}
+              <div className="glass-panel rounded-2xl p-6 border border-slate-900/80 relative overflow-hidden flex flex-col justify-between h-32">
+                <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-cyan-500/5 rounded-full blur-2xl pointer-events-none"></div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  Current Inventory Value
+                </div>
+                <div className="text-3xl font-black text-white tracking-tight mt-2">
+                  ₱{inventoryVal.toFixed(2)}
+                </div>
+                <div className="text-[10px] text-slate-500 font-medium mt-1">
+                  Valued from active products in stock
+                </div>
+              </div>
+
+              {/* Monthly Sales Card */}
+              <div className="glass-panel rounded-2xl p-6 border border-slate-900/80 relative overflow-hidden flex flex-col justify-between h-32">
+                <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none"></div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  This Month's Sales
+                </div>
+                <div className="text-3xl font-black text-emerald-400 tracking-tight mt-2">
+                  ₱{monthlySalesTotal.toFixed(2)}
+                </div>
+                <div className="text-[10px] text-slate-500 font-medium mt-1">
+                  Total of {monthlySalesQty} units sold this month
+                </div>
+              </div>
+
+              {/* Yearly Sales Card */}
+              <div className="glass-panel rounded-2xl p-6 border border-slate-900/80 relative overflow-hidden flex flex-col justify-between h-32">
+                <div className="absolute -right-4 -bottom-4 w-24 h-24 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none"></div>
+                <div className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                  This Year's Sales
+                </div>
+                <div className="text-3xl font-black text-indigo-400 tracking-tight mt-2">
+                  ₱{yearlySalesTotal.toFixed(2)}
+                </div>
+                <div className="text-[10px] text-slate-500 font-medium mt-1">
+                  Total of {yearlySalesQty} units sold this year
+                </div>
+              </div>
+            </div>
+
+            {/* Sales Table and Stats filter tab */}
+            <div className="glass-panel rounded-2xl overflow-hidden border border-slate-900/80 shadow-2xl">
+              {/* Header section with toggle for totals */}
+              <div className="px-6 py-5 border-b border-slate-900/80 bg-slate-900/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <h3 className="font-extrabold text-sm text-slate-200 uppercase tracking-wider">
+                  Sell Order Table
+                </h3>
+                <div className="flex items-center space-x-2 bg-slate-950 p-1 rounded-xl border border-slate-900">
+                  <button
+                    onClick={() => setSalesFilter("month")}
+                    className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition ${
+                      salesFilter === "month"
+                        ? "bg-cyan-600 text-white shadow-md"
+                        : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    This Month
+                  </button>
+                  <button
+                    onClick={() => setSalesFilter("year")}
+                    className={`px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition ${
+                      salesFilter === "year"
+                        ? "bg-cyan-600 text-white shadow-md"
+                        : "text-slate-400 hover:text-slate-200"
+                    }`}
+                  >
+                    This Year
+                  </button>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-900/80 bg-slate-900/10 text-xs font-extrabold uppercase tracking-wider text-slate-400">
+                      <th className="px-6 py-4.5">Date & Time</th>
+                      <th className="px-6 py-4.5">Product details</th>
+                      <th className="px-6 py-4.5 text-center">Qty Sold</th>
+                      <th className="px-6 py-4.5 text-right">Unit Price</th>
+                      <th className="px-6 py-4.5 text-right">Total revenue</th>
+                      <th className="px-6 py-4.5 text-center">Seller</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-900/40 text-sm">
+                    {(sales || [])
+                      .filter((s) => {
+                        const date = new Date(s.timestamp);
+                        if (salesFilter === "month") {
+                          return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+                        }
+                        return date.getFullYear() === currentYear;
+                      })
+                      .map((sale) => (
+                        <tr key={sale._id} className="hover:bg-slate-900/20 transition duration-150">
+                          <td className="px-6 py-4 text-slate-400 font-mono text-xs">
+                            {new Date(sale.timestamp).toLocaleString()}
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex flex-col">
+                              <span className="font-bold text-slate-200">
+                                {sale.productName}
+                              </span>
+                              <span className="text-[10px] text-slate-500 uppercase tracking-widest font-semibold">
+                                {sale.company} &bull; {sale.flavor}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 text-center font-bold text-slate-300">
+                            {sale.quantity}
+                          </td>
+                          <td className="px-6 py-4 text-right font-mono text-xs text-slate-400">
+                            ₱{sale.priceAtSale.toFixed(2)}
+                          </td>
+                          <td className="px-6 py-4 text-right font-bold font-mono text-xs text-cyan-400">
+                            ₱{(sale.priceAtSale * sale.quantity).toFixed(2)}
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <span className="px-2 py-0.5 rounded bg-slate-950 border border-slate-900 text-[10px] text-slate-400 font-semibold">
+                              {sale.sellerName || "System"}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                    {(!sales || sales.length === 0) && (
+                      <tr>
+                        <td colSpan={6} className="text-center py-12 text-slate-500 text-sm">
+                          No sales recorded.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
 
       {/* PRODUCT CREATION/EDIT MODAL */}
@@ -1794,6 +2057,118 @@ export default function Dashboard() {
                   className="px-5 py-2.5 bg-cyan-600 hover:bg-cyan-500 active:bg-cyan-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-cyan-600/20 transition duration-150 cursor-pointer"
                 >
                   Save Settings
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* ADD SELL ORDER MODAL */}
+      {isSaleModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
+          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+            {/* Modal Header */}
+            <div className="px-6 py-4.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/20">
+              <h3 className="text-lg font-bold text-white">Record Sell Order</h3>
+              <button
+                onClick={() => setIsSaleModalOpen(false)}
+                className="p-1 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-white transition cursor-pointer"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Modal Body Form */}
+            <form onSubmit={handleSaleSubmit} className="p-6 space-y-4">
+              {/* Product selection dropdown */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+                  Select Product to Sell
+                </label>
+                <div className="relative w-full">
+                  <select
+                    required
+                    className="w-full px-3.5 py-2.5 input-premium text-white bg-slate-900 border border-slate-800 rounded-xl text-sm focus:outline-none focus:border-cyan-500/50 cursor-pointer appearance-none pr-10"
+                    value={saleForm.productId}
+                    onChange={(e) => setSaleForm({ ...saleForm, productId: e.target.value })}
+                  >
+                    <option value="" disabled>Select a product...</option>
+                    {(products || [])
+                      .filter((p) => p.stock > 0)
+                      .map((p) => (
+                        <option key={p._id} value={p._id} className="bg-slate-950 text-slate-350">
+                          {p.company} - {p.productName} - {p.flavor} (₱{p.price.toFixed(2)}, {p.stock} units left)
+                        </option>
+                      ))}
+                  </select>
+                  <div className="absolute inset-y-0 right-3.5 flex items-center pointer-events-none text-slate-400">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quantity input */}
+              <div className="space-y-1.5">
+                <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+                  Quantity Sold
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max={
+                    saleForm.productId
+                      ? (products?.find((p) => p._id === saleForm.productId)?.stock || 1)
+                      : undefined
+                  }
+                  required
+                  placeholder="e.g. 1"
+                  className="w-full px-3.5 py-2.5 input-premium text-white placeholder-slate-600 text-sm font-semibold"
+                  value={saleForm.quantity}
+                  onChange={(e) =>
+                    setSaleForm({
+                      ...saleForm,
+                      quantity: Math.max(1, parseInt(e.target.value) || 1),
+                    })
+                  }
+                />
+                {saleForm.productId && (
+                  <span className="text-[10px] text-slate-500 block">
+                    * Max available: {products?.find((p) => p._id === saleForm.productId)?.stock || 0} units
+                  </span>
+                )}
+              </div>
+
+              {/* Price preview display */}
+              {saleForm.productId && (
+                <div className="p-3 bg-slate-950/60 border border-slate-800 rounded-xl flex items-center justify-between text-xs">
+                  <span className="text-slate-400 font-semibold uppercase tracking-wider">Total Sales Value</span>
+                  <span className="text-cyan-400 font-bold font-mono text-sm">
+                    ₱
+                    {(
+                      (products?.find((p) => p._id === saleForm.productId)?.price || 0) *
+                      saleForm.quantity
+                    ).toFixed(2)}
+                  </span>
+                </div>
+              )}
+
+              <div className="flex items-center justify-end space-x-3 pt-3 border-t border-slate-800">
+                <button
+                  type="button"
+                  onClick={() => setIsSaleModalOpen(false)}
+                  className="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 active:bg-slate-900 text-slate-300 text-sm font-semibold rounded-xl transition duration-150 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 bg-cyan-600 hover:bg-cyan-500 active:bg-cyan-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-cyan-600/20 transition duration-150 cursor-pointer"
+                >
+                  Submit Order
                 </button>
               </div>
             </form>

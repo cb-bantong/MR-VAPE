@@ -31,6 +31,17 @@ const schema = defineSchema({
     .index("by_company", ["company"])
     .index("by_productName", ["productName"])
     .index("by_flavor", ["flavor"]),
+  sales: defineTable({
+    productId: v.optional(v.id("products")),
+    company: v.string(),
+    productName: v.string(),
+    flavor: v.string(),
+    quantity: v.number(),
+    priceAtSale: v.number(),
+    timestamp: v.number(),
+    sellerId: v.optional(v.string()),
+    sellerName: v.optional(v.string()),
+  }).index("by_timestamp", ["timestamp"]),
   actionLogs: defineTable({
     userId: v.string(),
     userName: v.string(),
