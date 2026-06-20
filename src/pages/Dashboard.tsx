@@ -23,7 +23,7 @@ export default function Dashboard() {
   const products = useQuery(api.products.getProducts);
   const companies = useQuery(api.products.getCompanies);
   const totalStock = useQuery(api.products.getTotalSupply);
-  const sales = useQuery(api.sales.getSales);
+  const sales = useQuery(api.sales.getSales, isAuthenticated ? {} : "skip");
 
   // Conditionally fetch admin-only data
   const isAdmin = currentUser?.role === "admin";

@@ -71,7 +71,7 @@ export const getSales = query({
   handler: async (ctx) => {
     const userId = await auth.getUserId(ctx);
     if (!userId) {
-      throw new Error("Unauthorized");
+      return [];
     }
     return await ctx.db.query("sales").order("desc").collect();
   },
