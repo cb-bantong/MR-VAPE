@@ -52,6 +52,13 @@ export default function ProductCard({ group, onClick }: ProductCardProps) {
             {flavorCount} Flavors
           </div>
         )}
+
+        {/* Dynamic Stock Status Badge */}
+        {selectedProduct.stock === 0 && (
+          <div className="absolute top-2 left-2 px-2 py-1 bg-red-950/80 border border-red-500/20 text-[10px] uppercase font-bold tracking-wider text-red-400 rounded-lg animate-fade-in">
+            Out of Stock
+          </div>
+        )}
       </div>
 
       {/* Card Info Section */}
@@ -76,9 +83,9 @@ export default function ProductCard({ group, onClick }: ProductCardProps) {
 
         {/* Option Select Dropdown */}
         {group.length > 1 && (
-          <div className="w-full pt-1.5" onClick={(e) => e.stopPropagation()}>
+          <div className="w-full pt-1.5 relative" onClick={(e) => e.stopPropagation()}>
             <select
-              className="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:border-slate-700 focus:outline-none focus:border-cyan-500/50 cursor-pointer transition-colors duration-200"
+              className="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:border-slate-700 focus:outline-none focus:border-cyan-500/50 cursor-pointer transition-colors duration-200 appearance-none pr-8"
               value={selectedProduct._id}
               onChange={(e) => {
                 const selected = group.find((p) => p._id === e.target.value);
@@ -97,6 +104,11 @@ export default function ProductCard({ group, onClick }: ProductCardProps) {
                 );
               })}
             </select>
+            <div className="absolute inset-y-0 right-3.5 flex items-center pointer-events-none text-slate-400">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
           </div>
         )}
 

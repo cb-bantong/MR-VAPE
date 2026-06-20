@@ -145,7 +145,7 @@ export default function Products() {
                   </h3>
                   <div className="flex items-center justify-between pt-1.5">
                     <span className="text-xl font-extrabold text-cyan-400">
-                      ₱{selectedGroup[0].price.toFixed(2)}
+                      ₱{(selectedGroup[activeFlavorIndex]?.price ?? selectedGroup[0].price).toFixed(2)}
                     </span>
                     {selectedGroup[activeFlavorIndex]?.stock > 0 ? (
                       <span className="inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase bg-emerald-950/20 text-emerald-400 border border-emerald-500/10 tracking-wider">
@@ -196,6 +196,19 @@ export default function Products() {
                     {selectedGroup[activeFlavorIndex]?.description || "No description provided for this flavor."}
                   </p>
                 </div>
+
+                {/* Order via Facebook Button */}
+                <a
+                  href="https://www.facebook.com/profile.php?id=61580296598261"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 bg-blue-600/10 hover:bg-blue-600/20 active:bg-blue-600/30 border border-blue-500/20 hover:border-blue-500/30 text-blue-400 font-bold rounded-xl text-xs uppercase tracking-wider transition-all duration-200 cursor-pointer flex items-center justify-center space-x-2"
+                >
+                  <span>Order via Facebook</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </a>
               </div>
 
             </div>
