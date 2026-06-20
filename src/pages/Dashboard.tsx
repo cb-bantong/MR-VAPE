@@ -50,6 +50,8 @@ export default function Dashboard() {
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [showNewCompanyInput, setShowNewCompanyInput] = useState(false);
+  const [showNewProductNameInput, setShowNewProductNameInput] = useState(false);
   
   const [prodForm, setProdForm] = useState<{
     company: string;
@@ -142,6 +144,15 @@ export default function Dashboard() {
         storageId: product.storageId || "",
       });
       setImagePreview(product.imageUrl || null);
+
+      // Determine if company and product name are in the list of existing ones
+      const hasCompany = companies?.includes(product.company) ?? false;
+      const companyProds = products?.filter((p: any) => p.company === product.company) || [];
+      const prodNames = companyProds.map((p: any) => p.productName);
+      const hasProductName = prodNames.includes(product.productName);
+
+      setShowNewCompanyInput(!hasCompany);
+      setShowNewProductNameInput(!hasProductName);
     } else {
       setEditingProduct(null);
       setProdForm({
@@ -155,6 +166,8 @@ export default function Dashboard() {
         storageId: "",
       });
       setImagePreview(null);
+      setShowNewCompanyInput(false);
+      setShowNewProductNameInput(false);
     }
     setIsProductModalOpen(true);
   };
@@ -341,6 +354,17 @@ export default function Dashboard() {
         l.details.toLowerCase().includes(logSearch.toLowerCase())
       );
     }) || [];
+
+  // Get unique product names matching the selected brand/company
+  const availableProductNames = products
+    ? Array.from(
+        new Set(
+          products
+            .filter((p) => !prodForm.company || p.company === prodForm.company)
+            .map((p) => p.productName)
+        )
+      )
+    : [];
 
   // Brand-wise Stock Distribution
   const brandStats: { name: string; stock: number }[] = products
@@ -1347,34 +1371,114 @@ export default function Dashboard() {
             <form onSubmit={handleProductSubmit} className="p-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
-                    Brand/Company
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Relx, Waka"
-                    className="w-full px-3.5 py-2.5 input-premium text-white placeholder-slate-600 text-sm"
-                    value={prodForm.company}
-                    onChange={(e) =>
-                      setProdForm({ ...prodForm, company: e.target.value })
-                    }
-                  />
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+                      Brand/Company
+                    </label>
+                    {showNewCompanyInput && companies && companies.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowNewCompanyInput(false);
+                          setProdForm((prev) => ({ ...prev, company: "" }));
+                        }}
+                        className="text-[10px] font-bold text-cyan-400 hover:text-cyan-300 transition cursor-pointer"
+                      >
+                        Choose Existing
+                      </button>
+                    )}
+                  </div>
+                  {companies && companies.length > 0 && !showNewCompanyInput ? (
+                    <select
+                      required
+                      className="w-full px-3.5 py-2.5 input-premium text-white bg-slate-900 border border-slate-800 rounded-xl text-sm focus:outline-none focus:border-cyan-500/50 cursor-pointer"
+                      value={prodForm.company}
+                      onChange={(e) => {
+                        if (e.target.value === "__NEW__") {
+                          setShowNewCompanyInput(true);
+                          setProdForm((prev) => ({ ...prev, company: "", productName: "" }));
+                        } else {
+                          setProdForm((prev) => ({ ...prev, company: e.target.value }));
+                        }
+                      }}
+                    >
+                      <option value="" disabled>Select a Brand...</option>
+                      {companies.map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                      <option value="__NEW__" className="text-cyan-400 font-semibold">
+                        + Add New Brand...
+                      </option>
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Relx, Waka"
+                      className="w-full px-3.5 py-2.5 input-premium text-white placeholder-slate-600 text-sm"
+                      value={prodForm.company}
+                      onChange={(e) =>
+                        setProdForm({ ...prodForm, company: e.target.value })
+                      }
+                    />
+                  )}
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
-                    Product Name
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. Infinity, Smash"
-                    className="w-full px-3.5 py-2.5 input-premium text-white placeholder-slate-600 text-sm"
-                    value={prodForm.productName}
-                    onChange={(e) =>
-                      setProdForm({ ...prodForm, productName: e.target.value })
-                    }
-                  />
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
+                      Product Name
+                    </label>
+                    {showNewProductNameInput && availableProductNames.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowNewProductNameInput(false);
+                          setProdForm((prev) => ({ ...prev, productName: "" }));
+                        }}
+                        className="text-[10px] font-bold text-cyan-400 hover:text-cyan-300 transition cursor-pointer"
+                      >
+                        Choose Existing
+                      </button>
+                    )}
+                  </div>
+                  {availableProductNames.length > 0 && !showNewProductNameInput ? (
+                    <select
+                      required
+                      className="w-full px-3.5 py-2.5 input-premium text-white bg-slate-900 border border-slate-800 rounded-xl text-sm focus:outline-none focus:border-cyan-500/50 cursor-pointer"
+                      value={prodForm.productName}
+                      onChange={(e) => {
+                        if (e.target.value === "__NEW__") {
+                          setShowNewProductNameInput(true);
+                          setProdForm((prev) => ({ ...prev, productName: "" }));
+                        } else {
+                          setProdForm((prev) => ({ ...prev, productName: e.target.value }));
+                        }
+                      }}
+                    >
+                      <option value="" disabled>Select a Product Name...</option>
+                      {availableProductNames.map((name) => (
+                        <option key={name} value={name}>
+                          {name}
+                        </option>
+                      ))}
+                      <option value="__NEW__" className="text-cyan-400 font-semibold">
+                        + Add New Product...
+                      </option>
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Infinity, Smash"
+                      className="w-full px-3.5 py-2.5 input-premium text-white placeholder-slate-600 text-sm"
+                      value={prodForm.productName}
+                      onChange={(e) =>
+                        setProdForm({ ...prodForm, productName: e.target.value })
+                      }
+                    />
+                  )}
                 </div>
               </div>
 
