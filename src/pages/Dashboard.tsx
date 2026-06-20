@@ -1601,10 +1601,10 @@ export default function Dashboard() {
 
       {/* PRODUCT CREATION/EDIT MODAL */}
       {isProductModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-start justify-center p-4 sm:p-6 md:items-center animate-fade-in">
+          <div className="relative my-auto w-full max-w-lg bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden animate-fade-in md:my-0">
             {/* Modal Header */}
-            <div className="px-6 py-4.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/20">
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/20">
               <h3 className="text-lg font-bold text-white">
                 {editingProduct
                   ? `Edit Product: ${editingProduct.productName}`
@@ -1631,7 +1631,7 @@ export default function Dashboard() {
             </div>
 
             {/* Modal Body Form */}
-            <form onSubmit={handleProductSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleProductSubmit} className="p-4 sm:p-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
@@ -1928,10 +1928,10 @@ export default function Dashboard() {
 
       {/* USER MANAGEMENT MODAL */}
       {isUserModalOpen && isAdmin && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-start justify-center p-4 sm:p-6 md:items-center animate-fade-in">
+          <div className="relative my-auto w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden animate-fade-in md:my-0">
             {/* Modal Header */}
-            <div className="px-6 py-4.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/20">
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/20">
               <h3 className="text-lg font-bold text-white">
                 {editingUser
                   ? `Edit User: ${editingUser.name || "New Account"}`
@@ -1958,7 +1958,7 @@ export default function Dashboard() {
             </div>
 
             {/* Modal Body Form */}
-            <form onSubmit={handleUserSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleUserSubmit} className="p-4 sm:p-6 space-y-4">
               {!editingUser && (
                 <div className="p-3 bg-cyan-950/20 border border-cyan-800/20 text-cyan-400 rounded-xl text-xs leading-normal">
                   <strong>Notice:</strong> Pre-creating a profile creates an
@@ -2065,10 +2065,10 @@ export default function Dashboard() {
       )}
       {/* ADD SELL ORDER MODAL */}
       {isSaleModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/80 backdrop-blur-sm flex items-start justify-center p-4 sm:p-6 md:items-center animate-fade-in">
+          <div className="relative my-auto w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden animate-fade-in md:my-0">
             {/* Modal Header */}
-            <div className="px-6 py-4.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/20">
+            <div className="px-4 py-3.5 sm:px-6 sm:py-4.5 border-b border-slate-800 flex items-center justify-between bg-slate-950/20">
               <h3 className="text-lg font-bold text-white">Record Sell Order</h3>
               <button
                 onClick={() => setIsSaleModalOpen(false)}
@@ -2081,7 +2081,7 @@ export default function Dashboard() {
             </div>
 
             {/* Modal Body Form */}
-            <form onSubmit={handleSaleSubmit} className="p-6 space-y-4">
+            <form onSubmit={handleSaleSubmit} className="p-4 sm:p-6 space-y-4">
               {/* Product selection dropdown */}
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
