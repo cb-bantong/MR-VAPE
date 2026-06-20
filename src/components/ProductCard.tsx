@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+
 interface Product {
   _id: string;
   company: string;
@@ -15,7 +17,14 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ group, onClick }: ProductCardProps) {
-  const primaryProduct = group.find((p) => p.imageUrl) || group[0];
+  const [selectedProduct, setSelectedProduct] = useState<Product>(group[0]);
+
+  useEffect(() => {
+    // Sync state if group changes
+    setSelectedProduct(group[0]);
+  }, [group]);
+
+  const displayImage = selectedProduct.imageUrl || group.find((p) => p.imageUrl)?.imageUrl;
   const flavorCount = group.length;
 
   return (
@@ -25,10 +34,10 @@ export default function ProductCard({ group, onClick }: ProductCardProps) {
     >
       {/* Product Image Container */}
       <div className="relative w-full aspect-square bg-slate-950/40 rounded-xl border border-slate-900/60 overflow-hidden flex items-center justify-center mb-4 group-hover:border-cyan-500/20 transition-colors duration-300">
-        {primaryProduct.imageUrl ? (
+        {displayImage ? (
           <img
-            src={primaryProduct.imageUrl}
-            alt={primaryProduct.productName}
+            src={displayImage}
+            alt={selectedProduct.productName}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
@@ -48,14 +57,14 @@ export default function ProductCard({ group, onClick }: ProductCardProps) {
       {/* Card Info Section */}
       <div className="w-full flex flex-col items-start space-y-1.5 mt-auto">
         <h3 className="font-extrabold text-sm text-slate-200 group-hover:text-white transition-colors duration-300 line-clamp-1">
-          {primaryProduct.productName}
+          {selectedProduct.productName}
         </h3>
         <p className="text-xs text-slate-400 font-medium">
-          {primaryProduct.company}
+          {selectedProduct.company}
         </p>
         <div className="w-full flex items-center justify-between pt-1">
           <span className="font-black text-cyan-400 text-sm">
-            ₱{primaryProduct.price.toFixed(2)}
+            ₱{selectedProduct.price.toFixed(2)}
           </span>
           <span className="text-[10px] text-slate-500 opacity-0 group-hover:opacity-100 group-hover:text-cyan-400 transition-all duration-300 flex items-center space-x-0.5">
             <span>View Details</span>
@@ -64,6 +73,33 @@ export default function ProductCard({ group, onClick }: ProductCardProps) {
             </svg>
           </span>
         </div>
+
+        {/* Option Select Dropdown */}
+        {group.length > 1 && (
+          <div className="w-full pt-1.5" onClick={(e) => e.stopPropagation()}>
+            <select
+              className="w-full px-3 py-1.5 bg-slate-900 border border-slate-800 rounded-xl text-[10px] font-bold uppercase tracking-wider text-slate-300 hover:border-slate-700 focus:outline-none focus:border-cyan-500/50 cursor-pointer transition-colors duration-200"
+              value={selectedProduct._id}
+              onChange={(e) => {
+                const selected = group.find((p) => p._id === e.target.value);
+                if (selected) {
+                  setSelectedProduct(selected);
+                }
+              }}
+            >
+              {group.map((p) => {
+                const showCompany = group.some((other) => other.company !== p.company);
+                const label = showCompany ? `${p.company} - ${p.flavor}` : p.flavor;
+                return (
+                  <option key={p._id} value={p._id} className="bg-slate-950 text-slate-350">
+                    {label}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+        )}
+
         <button
           onClick={(e) => {
             e.stopPropagation();
