@@ -13,7 +13,7 @@ export const createProduct = mutation({
   args: {
     company: v.string(),
     productName: v.string(),
-    description: v.string(),
+    description: v.optional(v.string()),
     flavor: v.string(),
     stock: v.number(),
     price: v.number(),
@@ -34,7 +34,7 @@ export const createProduct = mutation({
     const productId = await ctx.db.insert("products", {
       company: args.company,
       productName: args.productName,
-      description: args.description,
+      description: args.description || "",
       flavor: args.flavor,
       stock: args.stock,
       price: args.price,
@@ -58,7 +58,7 @@ export const updateProduct = mutation({
     productId: v.id("products"),
     company: v.string(),
     productName: v.string(),
-    description: v.string(),
+    description: v.optional(v.string()),
     flavor: v.string(),
     stock: v.number(),
     price: v.number(),
@@ -98,7 +98,7 @@ export const updateProduct = mutation({
     await ctx.db.patch(args.productId, {
       company: args.company,
       productName: args.productName,
-      description: args.description,
+      description: args.description || "",
       flavor: args.flavor,
       stock: args.stock,
       price: args.price,

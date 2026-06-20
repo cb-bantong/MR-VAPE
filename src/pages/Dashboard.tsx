@@ -1389,29 +1389,36 @@ export default function Dashboard() {
                     )}
                   </div>
                   {companies && companies.length > 0 && !showNewCompanyInput ? (
-                    <select
-                      required
-                      className="w-full px-3.5 py-2.5 input-premium text-white bg-slate-900 border border-slate-800 rounded-xl text-sm focus:outline-none focus:border-cyan-500/50 cursor-pointer"
-                      value={prodForm.company}
-                      onChange={(e) => {
-                        if (e.target.value === "__NEW__") {
-                          setShowNewCompanyInput(true);
-                          setProdForm((prev) => ({ ...prev, company: "", productName: "" }));
-                        } else {
-                          setProdForm((prev) => ({ ...prev, company: e.target.value }));
-                        }
-                      }}
-                    >
-                      <option value="" disabled>Select a Brand...</option>
-                      {companies.map((c) => (
-                        <option key={c} value={c}>
-                          {c}
+                    <div className="relative w-full">
+                      <select
+                        required
+                        className="w-full px-3.5 py-2.5 input-premium text-white bg-slate-900 border border-slate-800 rounded-xl text-sm focus:outline-none focus:border-cyan-500/50 cursor-pointer appearance-none pr-10"
+                        value={prodForm.company}
+                        onChange={(e) => {
+                          if (e.target.value === "__NEW__") {
+                            setShowNewCompanyInput(true);
+                            setProdForm((prev) => ({ ...prev, company: "", productName: "" }));
+                          } else {
+                            setProdForm((prev) => ({ ...prev, company: e.target.value }));
+                          }
+                        }}
+                      >
+                        <option value="" disabled>Select a Brand...</option>
+                        {companies.map((c) => (
+                          <option key={c} value={c}>
+                            {c}
+                          </option>
+                        ))}
+                        <option value="__NEW__" className="text-cyan-400 font-semibold">
+                          + Add New Brand...
                         </option>
-                      ))}
-                      <option value="__NEW__" className="text-cyan-400 font-semibold">
-                        + Add New Brand...
-                      </option>
-                    </select>
+                      </select>
+                      <div className="absolute inset-y-0 right-3.5 flex items-center pointer-events-none text-slate-400">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
                   ) : (
                     <input
                       type="text"
@@ -1444,29 +1451,36 @@ export default function Dashboard() {
                     )}
                   </div>
                   {availableProductNames.length > 0 && !showNewProductNameInput ? (
-                    <select
-                      required
-                      className="w-full px-3.5 py-2.5 input-premium text-white bg-slate-900 border border-slate-800 rounded-xl text-sm focus:outline-none focus:border-cyan-500/50 cursor-pointer"
-                      value={prodForm.productName}
-                      onChange={(e) => {
-                        if (e.target.value === "__NEW__") {
-                          setShowNewProductNameInput(true);
-                          setProdForm((prev) => ({ ...prev, productName: "" }));
-                        } else {
-                          setProdForm((prev) => ({ ...prev, productName: e.target.value }));
-                        }
-                      }}
-                    >
-                      <option value="" disabled>Select a Product Name...</option>
-                      {availableProductNames.map((name) => (
-                        <option key={name} value={name}>
-                          {name}
+                    <div className="relative w-full">
+                      <select
+                        required
+                        className="w-full px-3.5 py-2.5 input-premium text-white bg-slate-900 border border-slate-800 rounded-xl text-sm focus:outline-none focus:border-cyan-500/50 cursor-pointer appearance-none pr-10"
+                        value={prodForm.productName}
+                        onChange={(e) => {
+                          if (e.target.value === "__NEW__") {
+                            setShowNewProductNameInput(true);
+                            setProdForm((prev) => ({ ...prev, productName: "" }));
+                          } else {
+                            setProdForm((prev) => ({ ...prev, productName: e.target.value }));
+                          }
+                        }}
+                      >
+                        <option value="" disabled>Select a Product Name...</option>
+                        {availableProductNames.map((name) => (
+                          <option key={name} value={name}>
+                            {name}
+                          </option>
+                        ))}
+                        <option value="__NEW__" className="text-cyan-400 font-semibold">
+                          + Add New Product...
                         </option>
-                      ))}
-                      <option value="__NEW__" className="text-cyan-400 font-semibold">
-                        + Add New Product...
-                      </option>
-                    </select>
+                      </select>
+                      <div className="absolute inset-y-0 right-3.5 flex items-center pointer-events-none text-slate-400">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
                   ) : (
                     <input
                       type="text"
@@ -1616,11 +1630,10 @@ export default function Dashboard() {
 
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold uppercase tracking-wider text-slate-400 block">
-                  Description
+                  Description <span className="text-[10px] text-slate-500 font-normal lowercase">(Optional)</span>
                 </label>
                 <textarea
                   rows={3}
-                  required
                   placeholder="Provide specifications, nicotine volume, etc..."
                   className="w-full px-3.5 py-2.5 input-premium text-white placeholder-slate-600 text-sm resize-none"
                   value={prodForm.description}
